@@ -1,0 +1,196 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MoDGuard · A warning before the blind turn</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--as:#1b1c1d;--fo:#1f3a2a;--st:#bfb8a8;--am:#f0a81a;--wh:#f3f0e6;--rd:#b3382c}
+*{box-sizing:border-box;margin:0}html{scroll-behavior:smooth}
+body{background:var(--as);color:var(--wh);font:400 16px/1.5 Inter,system-ui,sans-serif}
+h1,h2,h3,.hd{font-family:'Space Grotesk',Manrope,system-ui,sans-serif;letter-spacing:-.02em}
+:focus-visible{outline:3px solid var(--am);outline-offset:3px}
+nav{position:fixed;inset:0 0 auto;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px 4vw;background:linear-gradient(#1b1c1de6,#1b1c1d00)}
+.wm{font:700 22px 'Space Grotesk',sans-serif;display:flex;align-items:baseline;gap:12px}.wm small{font:400 12px Inter;color:var(--st);letter-spacing:.02em}
+.o{display:inline-block;width:.6em;height:.6em;border:.09em solid currentColor;border-radius:50%;position:relative;margin:0 .02em}
+.o::after{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--am),#0000 28%);animation:sw 3s linear infinite}
+@keyframes sw{to{transform:rotate(1turn)}}
+nav div{display:flex;gap:10px}nav a,nav button{color:var(--wh);font:600 14px Inter;background:#0006;border:2px solid #f3f0e655;border-radius:999px;padding:7px 16px;text-decoration:none;cursor:pointer}
+#bar{position:fixed;top:0;left:0;height:4px;background:var(--am);z-index:30;width:0}
+.sec{min-height:100vh;padding:110px 5vw 70px;position:relative}
+.tall{height:420vh}.stick{position:sticky;top:0;height:100vh;overflow:hidden}
+.btn{font:700 17px 'Space Grotesk';border:0;border-radius:14px;padding:13px 26px;background:var(--am);color:#1b1c1d;cursor:pointer;box-shadow:0 5px 0 #9a6a0a;transition:transform .1s,box-shadow .1s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #9a6a0a}
+.btn.q{font-size:14px;padding:9px 18px;box-shadow:0 3px 0 #9a6a0a}
+/* hero */
+#hero{height:230vh;background:#6b4a3a}.stage-h{background:linear-gradient(#e8a85a,#7a5240 40%,#2c4a31 75%)}
+.cam{position:absolute;inset:0;transform-origin:62% 66%}.cam svg{width:100%;height:100%;display:block}
+.stick::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 5%,#ffcf7a55,#0000 45%),linear-gradient(#1b1c1dd9,#0000 55%);pointer-events:none}
+.ht{position:absolute;z-index:3;left:5vw;top:18vh;max-width:760px}
+.ht h1{font-size:clamp(48px,9vw,128px);line-height:.95}.ht h2{font-size:clamp(22px,3.2vw,40px);margin:14px 0 8px;font-weight:500}.ht p{color:#e9e2d0;margin-bottom:26px}
+/* scenes */
+.stage{position:relative;border-radius:14px;overflow:hidden;border:3px solid #3a3b3c;box-shadow:0 24px 60px #0009}.stage svg{display:block;width:100%;height:auto}
+.risk{animation:pl 2.4s ease-in-out infinite;transform-origin:470px 290px}@keyframes pl{50%{opacity:.5}}
+.fog{fill:#cdd0c6;opacity:0;transition:opacity 1s}[data-w=fog] .fog{opacity:.74}
+.rd{transition:stroke 1s}[data-w=rain] .rd{stroke:#11151a}.wet{opacity:0;transition:opacity 1s}[data-w=rain] .wet{opacity:.25}
+.rain{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1s;background:linear-gradient(100deg,#0000 47%,#fff8 50%,#0000 53%);background-size:70px 110px;animation:rn .45s linear infinite}
+[data-w=rain] .rain{opacity:.5}@keyframes rn{to{background-position:-30px 110px}}
+.cap{font:500 clamp(24px,3.6vw,46px)/1.1 'Space Grotesk';max-width:16em}
+.facts{display:flex;gap:6vw;margin:22px 0 8px;flex-wrap:wrap}.facts b{display:block;font:700 clamp(30px,4vw,52px)/1 'Space Grotesk';color:var(--am)}.facts span{color:var(--st);font-size:15px}
+.fn{font-size:12px;color:#9d978a}
+.grid{display:grid;grid-template-columns:minmax(250px,310px) 1fr;gap:24px;align-items:start;margin-top:22px}
+.ctl{background:#2a2b2c;border:3px solid var(--st);border-radius:18px;padding:18px;display:grid;gap:14px}
+.ctl h3{font-size:15px;color:var(--st);font-weight:500;margin-bottom:6px}.ctl [role=group]{display:flex;gap:8px;flex-wrap:wrap}
+.ctl [aria-pressed]{flex:1;font:700 14px Inter;color:var(--wh);background:#1b1c1d;border:3px solid var(--wh);border-radius:12px;padding:9px 6px;cursor:pointer;box-shadow:0 3px 0 #000;transition:transform .1s}
+.ctl [aria-pressed]:active{transform:translateY(3px);box-shadow:none}.ctl [aria-pressed=true]{background:var(--wh);color:#1b1c1d}
+#steps{list-style:none;padding:0;display:grid;gap:5px;font-size:14px}#steps li{color:#7d7a72;padding-left:22px;position:relative}#steps li::before{content:"";position:absolute;left:2px;top:6px;width:11px;height:11px;border-radius:50%;border:2px solid #7d7a72}
+#steps li.on{color:var(--wh)}#steps li.on::before{background:var(--am);border-color:var(--am)}
+.prev{background:#111;border:3px solid #555;border-radius:8px;padding:10px;text-align:center;font:700 18px/1.1 'Space Grotesk';color:#666;display:flex;align-items:center;justify-content:center;gap:10px;min-height:66px}
+.prev.s1{background:var(--am);color:#1b1c1d;border-color:var(--wh)}.prev.s2{background:var(--rd);color:var(--wh);border-color:var(--am);animation:bl .5s steps(1) infinite}
+@keyframes bl{50%{background:var(--am);color:#1b1c1d}}.spk{width:26px;display:none}.s2 .spk{display:block;animation:pl .4s infinite}
+/* inside */
+.inside{display:grid;grid-template-columns:1fr 360px;align-items:center;height:100%;padding:0 5vw;gap:20px}
+.iso{position:relative;height:60vh;perspective:1400px}.iso>div{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(60deg) rotateZ(-38deg) translateY(10%)}
+.slab{position:absolute;left:50%;top:50%;width:250px;height:170px;margin:-85px 0 0 -125px;border-radius:10px;border:2px solid #0006;transition:outline-color .3s}.slab.hl{outline:4px solid var(--am)}
+.slab::after{content:attr(data-t);position:absolute;left:10px;bottom:6px;font:600 12px Inter;color:#fffc}
+#parts{list-style:none;padding:0;display:grid;gap:10px}#parts li{padding:8px 14px;border-left:5px solid #444;color:#8f8b80;transition:all .3s}#parts li b{display:block;font:600 19px 'Space Grotesk'}#parts li.on{border-color:var(--am);color:var(--wh);background:#ffffff0d}
+/* roads */
+.lab{position:absolute;background:var(--wh);color:#1b1c1d;font:700 clamp(12px,1.5vw,19px) 'Space Grotesk';padding:7px 14px;border-left:6px solid var(--am);border-radius:4px;opacity:0;transform:translateY(10px);transition:all .6s}.in .lab{opacity:1;transform:none}
+.map{display:grid;grid-template-columns:1.5fr 1fr;gap:30px;align-items:center;margin-top:24px}.map svg{width:100%;background:#26382b;border-radius:14px;border:3px solid #3a3b3c}
+.ind{display:grid;gap:22px}.ind div{font:600 20px 'Space Grotesk'}.ind i{display:block;height:12px;border-radius:6px;background:#333;margin-top:8px;overflow:hidden}.ind i::after{content:"";display:block;height:100%;width:var(--w);background:var(--am)}
+.end{text-align:center;display:grid;gap:8px;justify-items:center;margin:28px 0}.end h2{font-size:clamp(28px,5vw,64px);line-height:1.05}.end .wm{font-size:32px;margin-top:20px}.end p{color:var(--st)}
+@media(max-width:820px){.grid,.map,.inside{grid-template-columns:1fr}.inside{padding-top:70px}.iso{height:38vh}.nav small{display:none}.wm small{display:none}.ht{top:14vh}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style></head><body>
+<div id="bar"></div>
+<nav><div class="wm" aria-label="MoDGuard">M<span class="o"></span>DGuard <small>404 Founders</small></div><div><a href="#demo">Live Demo</a><button id="snd" aria-pressed="false">Sound off</button></div></nav>
+
+<header id="hero"><div class="stick stage-h"><div class="cam" id="cam"></div>
+<div class="ht" id="ht"><h1 class="hd" aria-label="MoDGuard">M<span class="o"></span>DGuard</h1><h2>A warning before the blind turn</h2><p>A solar-powered road-safety system for dangerous curves</p><button class="btn q" data-run>Start Live Demo</button></div></div></header>
+
+<section class="sec" id="problem"><p class="cap">At a blind turn, drivers react after the risk appears.</p>
+<div class="stage" id="s-prob" style="margin-top:24px;max-width:1100px"></div>
+<div class="facts"><div><b>4.88 lakh</b><span>road accidents in India in 2024</span></div><div><b>1.77 lakh</b><span>lives lost</span></div></div>
+<p class="fn">Source: MoRTH road-accident reports, as cited in the MoDGuard submission.</p></section>
+
+<section class="sec" id="demo"><h2 class="cap">Live simulation</h2>
+<div class="grid"><div class="ctl">
+<div><h3>Weather</h3><div role="group" aria-label="Weather"><button data-k="w" data-v="clear" aria-pressed="true">Clear</button><button data-k="w" data-v="rain" aria-pressed="false">Rain</button><button data-k="w" data-v="fog" aria-pressed="false">Fog</button></div></div>
+<div><h3>Vehicle speed</h3><div role="group" aria-label="Vehicle speed"><button data-k="o" data-v="0" aria-pressed="true">Normal</button><button data-k="o" data-v="1" aria-pressed="false">Over-speeding</button></div></div>
+<button class="btn" id="run" data-run>Run Simulation</button>
+<ul id="steps"><li>Radar detected vehicle</li><li>LoRa alert sent</li><li>Opposite driver warned</li><li>Vehicle slows before the curve</li></ul>
+<div><h3>Unit B display</h3><div class="prev" id="prev"><b>STANDBY</b><svg class="spk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9v6h4l5 4V5L7 9zM16 8a5 5 0 010 8M19 5a9 9 0 010 14"/></svg></div></div>
+</div><div class="stage" id="simwrap" data-w="clear"><div id="s-sim"></div><div class="rain"></div></div></div>
+<p class="fn" style="margin-top:12px">Press D to start or replay. Radar range shown is roughly 100–150 m.</p></section>
+
+<section class="tall" id="inside"><div class="stick"><div class="inside"><div class="iso"><div id="iso">
+<div class="slab" data-t="mmWave radar" style="background:#c9b98a"></div>
+<div class="slab" data-t="LoRa SX1262" style="background:#2d4a3a"></div>
+<div class="slab" data-t="ESP32" style="background:#1f5a34"></div>
+<div class="slab" data-t="LiFePO4 + solar" style="background:#44505a"></div>
+<div class="slab" data-t="LED matrix + buzzer" style="background:radial-gradient(#f0a81a 35%,#2a1f08 40%) 0 0/14px 14px"></div>
+<div class="slab" data-t="IP65 enclosure" style="background:#8a8f86aa"></div></div></div>
+<ul id="parts"><li><b>mmWave radar</b>detects direction and speed</li><li><b>LoRa radio</b>sends an alert without mobile network</li><li><b>ESP32</b>runs the warning logic</li><li><b>Solar and LiFePO4 battery</b>operates without power lines</li><li><b>LED board and buzzer</b>warns approaching drivers</li><li><b>IP65 enclosure</b>withstands outdoor conditions</li></ul></div></div></section>
+
+<section class="sec" id="roads"><h2 class="cap">Designed for the roads that need it most</h2>
+<div class="stage" id="inst" style="margin-top:24px;max-width:1100px"><div id="s-inst"></div>
+<span class="lab" style="left:3%;top:66%;transition-delay:.3s">No network required</span><span class="lab" style="left:34%;top:76%;transition-delay:1s">No cable trenching</span><span class="lab" style="left:66%;top:52%;transition-delay:1.7s">Solar powered</span><span class="lab" style="left:48%;top:6%;transition-delay:2.4s">Estimated ₹15–25k per pair</span><span class="lab" style="left:66%;top:36%;transition-delay:3.1s">Installation in about a day</span></div></section>
+
+<section class="sec" id="data"><h2 class="cap">Road-safety data layer</h2>
+<div class="map"><svg viewBox="0 0 600 400" role="img" aria-label="Abstract road map with three curves; one highlighted as highest risk">
+<path id="mp" d="M20 340C120 340 150 240 240 240S330 330 400 300S480 120 580 100" fill="none" stroke="#bfb8a8" stroke-width="10" stroke-linecap="round" opacity=".5"/>
+<g fill="none" stroke-width="12" stroke-linecap="round" pathLength="100"><path d="M20 340C120 340 150 240 240 240S330 330 400 300S480 120 580 100" pathLength="100" stroke="#6f9a5a" stroke-dasharray="12 88" stroke-dashoffset="-14"/><path d="M20 340C120 340 150 240 240 240S330 330 400 300S480 120 580 100" pathLength="100" stroke="#f0a81a" stroke-dasharray="12 88" stroke-dashoffset="-42"/><path d="M20 340C120 340 150 240 240 240S330 330 400 300S480 120 580 100" pathLength="100" stroke="#b3382c" stroke-dasharray="14 86" stroke-dashoffset="-72"/></g>
+<circle id="ring" r="26" fill="none" stroke="#b3382c" stroke-width="3"/><text id="rt" font-family="Space Grotesk" font-weight="700" font-size="15" fill="#f3f0e6">Highest-risk curve</text></svg>
+<div class="ind"><div>Vehicle counts<i style="--w:80%"></i></div><div>Speed patterns<i style="--w:68%"></i></div><div>Near-miss events<i style="--w:55%"></i></div><p class="fn" style="font-size:14px;color:var(--st)">Illustrative pilot data for identifying high-risk curves</p></div></div></section>
+
+<section class="sec" id="close"><div class="stage" id="s-end" style="max-width:1000px;margin:0 auto"></div>
+<div class="end"><h2>See the danger early.<br>Warn drivers in time.<br>Make rural roads safer.</h2>
+<div class="wm" aria-label="MoDGuard">M<span class="o"></span>DGuard</div><p class="hd" style="font-size:20px;color:var(--wh)">404 Founders</p><p>Venu · Sujal · Neelava · Vihaan</p><p>IndustrySolve Hackathon | IIIT Delhi</p><button class="btn" data-run style="margin-top:14px">Replay the Live Demo</button></div></section>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const P="M30 400H300Q470 400 470 290Q470 120 640 120H780"; // road centreline (shared by every scene)
+
+/* ---------- Simulation state: a pure function of elapsed seconds ----------
+   Timeline (s): 1.0 radar lock · 1.8 LoRa alert travels (1 s) · 2.8 Unit B shows VEHICLE APPROACHING
+   3.6 SLOW DOWN + buzzer (over-speed only) · 3.4 opposite vehicle slows · 8.0 complete.
+   Positions are fractions (0..1) along the road path; A enters from 0, B from 1. */
+function S(t,c){
+ const v=c.plain?.04:c.over?.075:.05;
+ return{sA:Math.min(.55,v*t),sB:1-(c.plain?.04*t:.05*Math.min(t,3.2)+.022*Math.max(0,t-3.2)),
+  lock:t>=1,arc:Math.max(0,Math.min(1,t-1.8)),warn:t>=2.8?(c.over&&t>=3.6?2:1):0,
+  step:t>=3.4?4:t>=2.8?3:t>=1.8?2:t>=1?1:0,done:t>=8}}
+
+/* ---------- Scene builder: top-down road, units, vehicles, radar, LoRa arc ---------- */
+function mk(host,o){
+ const car=(c,k)=>`<g class="${k}"><rect x="-12" y="-6" width="24" height="12" rx="3" fill="${c}"/><rect x="3" y="-4.5" width="6" height="9" rx="1" fill="#262729"/></g>`;
+ host.innerHTML=`<svg viewBox="0 0 800 500" ${o.slice?'preserveAspectRatio="xMidYMid slice"':''} role="img" aria-label="Top-down view of a blind curve"><rect width="800" height="500" fill="#2c4a31"/>
+ ${o.cones?'<polygon class="cA" fill="#f3f0e6" opacity=".16"/><polygon class="cB" fill="#f3f0e6" opacity=".16"/>':''}
+ <ellipse cx="320" cy="250" rx="100" ry="78" fill="#46663f" stroke="#5d7d52" stroke-width="3"/><circle cx="290" cy="235" r="14" fill="#3a5634"/><circle cx="350" cy="270" r="18" fill="#3a5634"/><circle cx="330" cy="215" r="10" fill="#3a5634"/>
+ ${o.cones?'<text x="320" y="255" fill="#f3f0e6" font-size="11" text-anchor="middle" opacity=".8">no line of sight</text>':''}
+ ${o.risk?'<circle class="risk" cx="470" cy="290" r="100" fill="#b3382c" opacity=".2"/>':''}
+ <path d="${P}" fill="none" stroke="#bdb6a3" stroke-width="50"/><path class="rd" d="${P}" fill="none" stroke="#262729" stroke-width="43"/>
+ <path class="wet" d="${P}" fill="none" stroke="#9fb3b8" stroke-width="24" style="filter:blur(5px)"/><path d="${P}" fill="none" stroke="#e8e4d8" stroke-width="2" stroke-dasharray="12 14"/>
+ ${car('#f3f0e6','va')}${car('#f0a81a','vb')}<rect class="fog" width="800" height="500"/><g class="us"></g></svg>`;
+ const svg=$('svg',host),rd=$('.rd',svg),L=rd.getTotalLength(),us=$('.us',svg);
+ const pt=s=>rd.getPointAtLength(Math.max(0,Math.min(1,s))*L),ang=s=>{const a=pt(s-.004),b=pt(s+.004);return Math.atan2(b.y-a.y,b.x-a.x)};
+ const U=(o.units||[]).map(k=>{const A=k=='A',s=A?.17:.83,side=A?1:-1,p=pt(s),h=ang(s),x=p.x-Math.sin(h)*30*side,y=p.y+Math.cos(h)*30*side;
+  us.insertAdjacentHTML('beforeend',`<path class="rc" d="M0 0L140 -30L140 30Z" fill="#f0a81a" opacity=".2"/>
+  <g transform="translate(${x},${y})"><rect x="-15" y="${side>0?-26:12}" width="30" height="14" rx="2" fill="#27405a" stroke="#aab" stroke-width="1" transform="skewX(-18)"/><rect x="-9" y="-9" width="18" height="18" rx="3" fill="#6b705f" stroke="#e8e4d8" stroke-width="2"/><circle class="ua" r="3.5" fill="#777"/>
+  <rect x="-35" y="${side>0?14:-44}" width="70" height="30" rx="4" fill="#111" stroke="#f3f0e6" stroke-width="2"/><text class="sg" x="0" y="${side>0?33:-25}" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="8" fill="#777">MoDGuard</text></g>`);
+  const rc=us.lastElementChild.previousElementChild||us.children[us.children.length-2];
+  return{A,s,x,y,rc:us.children[us.children.length-2],ua:$('.ua',us.lastElementChild),sg:$('.sg',us.lastElementChild),bg:$('rect:last-of-type',us.lastElementChild),key:''}});
+ let arc=null,dot=null;
+ if(U.length==2){const a=U[0],b=U[1];us.insertAdjacentHTML('beforeend',`<path class="lo" d="M${a.x} ${a.y}Q${(a.x+b.x)/2} ${Math.min(a.y,b.y)-150} ${b.x} ${b.y}" fill="none" stroke="#f0a81a" stroke-width="4" stroke-linecap="round" opacity="0"/><circle class="ld" r="6" fill="#f3f0e6" opacity="0"/>`);arc=$('.lo',us);dot=$('.ld',us)}
+ const va=$('.va',svg),vb=$('.vb',svg),cA=$('.cA',svg),cB=$('.cB',svg);
+ const place=(g,s,f)=>{const p=pt(s);g.setAttribute('transform',`translate(${p.x},${p.y}) rotate(${(ang(s)+f)*180/Math.PI})`)};
+ const cone=(el,p,q)=>{const a=Math.atan2(q.y-p.y,q.x-p.x),f=r=>`${p.x+150*Math.cos(a+r)},${p.y+150*Math.sin(a+r)}`;el.setAttribute('points',`${p.x},${p.y} ${f(-.25)} ${f(.25)}`)};
+ const draw=(t,c)=>{const st=S(t,c);place(va,st.sA,0);place(vb,st.sB,Math.PI);
+  if(o.cones){cone(cA,pt(st.sA),pt(st.sB));cone(cB,pt(st.sB),pt(st.sA))}
+  U.forEach(u=>{const lk=st.lock&&(u.A||c.both),tgt=pt(u.A?st.sA:st.sB),base=pt(u.s+(u.A?-.12:.12));
+   const a=lk?Math.atan2(tgt.y-u.y,tgt.x-u.x):Math.atan2(base.y-u.y,base.x-u.x)+.4*Math.sin(t*3);
+   u.rc.setAttribute('transform',`translate(${u.x},${u.y}) rotate(${a*180/Math.PI})`);u.rc.setAttribute('opacity',lk?.5:.2);u.ua.setAttribute('fill',lk?'#f0a81a':'#777');
+   const w=(u.A&&!c.both)?0:st.warn,k=w+(w==2?Math.floor(t*2)%2:0)+'';
+   if(u.key!=k){u.key=k;const T=['#111','#f0a81a','#b3382c','#f0a81a'][+k],tx=['#777','#1b1c1d','#f3f0e6','#1b1c1d'][+k];u.bg.setAttribute('fill',T);u.sg.setAttribute('fill',tx);u.sg.setAttribute('font-size',w==2?14:8);
+    u.sg.innerHTML=w==0?'MoDGuard':w==1?'<tspan x="0" dy="-5">VEHICLE</tspan><tspan x="0" dy="10">APPROACHING</tspan>':'<tspan x="0" dy="-1">SLOW</tspan><tspan x="0" dy="13">DOWN</tspan>'}});
+  if(arc){const n=arc.getTotalLength();arc.setAttribute('stroke-dasharray',`${st.arc*n} ${n}`);arc.setAttribute('opacity',st.arc>0?.9:0);const q=arc.getPointAtLength(st.arc*n);dot.setAttribute('cx',q.x);dot.setAttribute('cy',q.y);dot.setAttribute('opacity',st.arc>0&&st.arc<1?1:0)}
+  return st};
+ return{draw}}
+
+/* ---------- Register scenes; draw only those on screen ---------- */
+const sim={t:0,run:false,over:0,w:'clear'},scs=[];
+function reg(id,o,cfg,isSim){const host=$('#'+id),e={s:mk(host,o),cfg,sim:isSim,vis:false};scs.push(e);new IntersectionObserver(([x])=>e.vis=x.isIntersecting).observe(host);return e}
+const cam=$('#cam');reg('cam',{slice:1,risk:1},{plain:1}).vis=true;
+reg('s-prob',{cones:1,risk:1},{plain:1});reg('s-sim',{units:['A','B'],risk:1},sim,true);reg('s-inst',{units:['A']},{plain:1});reg('s-end',{units:['A','B']},{both:1});
+$('#cam').firstChild; // hero scene lives inside #cam
+const runBtn=$('#run');let beeped=false,last=0;
+function hud(st){$$('#steps li').forEach((l,i)=>l.classList.toggle('on',i<st.step));const p=$('#prev');p.className='prev s'+st.warn;p.firstElementChild.innerHTML=['STANDBY','VEHICLE<br>APPROACHING','SLOW DOWN'][st.warn];
+ if(st.warn&&!beeped){beeped=true;beep()}}
+function loop(ts){const dt=Math.min(.05,(ts-last)/1000||0);last=ts;
+ for(const e of scs){if(!e.vis)continue;
+  if(e.sim){if(sim.run){sim.t+=dt;if(sim.t>=8){sim.t=8;sim.run=false;runBtn.textContent='Replay Demo'}}hud(e.s.draw(sim.t,{over:sim.over}))}
+  else e.s.draw(RM?5:(ts/1000)%9.5,e.cfg)}
+ requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+
+function run(){sim.t=RM?8:0;sim.run=!RM;beeped=false;runBtn.textContent=RM?'Replay Demo':'Running…';$('#demo').scrollIntoView({behavior:RM?'auto':'smooth'})}
+$$('[data-run]').forEach(b=>b.onclick=run);
+addEventListener('keydown',e=>{if(e.key.toLowerCase()=='d'&&!e.metaKey&&!e.ctrlKey&&!e.altKey)run()});
+$$('[data-k]').forEach(b=>b.onclick=()=>{b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x==b));
+ if(b.dataset.k=='w'){sim.w=b.dataset.v;$('#simwrap').dataset.w=sim.w;gain()}else sim.over=+b.dataset.v});
+
+/* ---------- Audio (muted by default): quiet rain/road bed + one restrained beep ---------- */
+let ac=null,on=false,ng;
+function gain(){if(ng)ng.gain.value=on?(sim.w=='rain'?.07:.012):0}
+$('#snd').onclick=e=>{on=!on;e.target.textContent=on?'Sound on':'Sound off';e.target.setAttribute('aria-pressed',on);
+ if(on&&!ac){ac=new AudioContext();const b=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  const n=ac.createBufferSource(),f=ac.createBiquadFilter();n.buffer=b;n.loop=true;f.type='lowpass';f.frequency.value=900;ng=ac.createGain();n.connect(f);f.connect(ng);ng.connect(ac.destination);n.start()}gain()};
+function beep(){if(!on||!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=880;g.gain.value=.05;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.18)}
+
+/* ---------- Scroll story: progress bar, hero camera, exploded view ---------- */
+const cl=x=>Math.max(0,Math.min(1,x));
+function sc(){const y=scrollY;$('#bar').style.width=y/(document.documentElement.scrollHeight-innerHeight)*100+'%';
+ const hr=$('#hero'),p=cl(y/(hr.offsetHeight-innerHeight));cam.style.transform=`perspective(1100px) rotateX(${RM?0:46*(1-p)}deg) scale(${1.15+p*1.5})`;$('#ht').style.opacity=1-p*1.4;
+ const ins=$('#inside'),q=cl((y-ins.offsetTop)/(ins.offsetHeight-innerHeight)),sp=q<.1?q*10:q>.9?(1-q)*10:1,ai=q<.1||q>.9?-1:Math.floor((q-.1)/.8*6),Z=[4,3,2,1,5,0];
+ $$('.slab').forEach((s,i)=>{s.style.transform=`translateZ(${Z[i]*(8+sp*46)}px)`;s.classList.toggle('hl',i==ai)});$$('#parts li').forEach((l,i)=>l.classList.toggle('on',i==ai))}
+addEventListener('scroll',sc,{passive:true});sc();
+new IntersectionObserver(([x])=>$('#inst').classList.toggle('in',x.isIntersecting),{threshold:.35}).observe($('#inst'));
+const mp=$('#mp'),q=mp.getPointAtLength(mp.getTotalLength()*.8);$('#ring').setAttribute('cx',q.x);$('#ring').setAttribute('cy',q.y);$('#rt').setAttribute('x',q.x-150);$('#rt').setAttribute('y',q.y-38);
+</script></body></html>
